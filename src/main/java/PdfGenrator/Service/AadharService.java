@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -27,7 +28,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,17 +47,35 @@ import PdfGenrator.entity.AadharInfo;
 @Service
 public class AadharService {
 	
+	private final ResourceLoader resourceLoader;
+	
 	    @Value("${pdf.output.directory}")
     	private String pdfOutputDirectory;
 	
-	    @Value("classpath:ODIA-BLANK.jpg")
-	    private Resource templateImage;
-	
-	
+//	    @Value("classpath:ODIA-BLANK.jpg")
+//	    private Resource templateImage;
+	    
+	    
+	    public AadharService(ResourceLoader resourceLoader) {
+	        this.resourceLoader = resourceLoader;
+	    }
+
 	 public Resource  generateAadharPDF(AadharInfo aadharInfo ,MultipartFile photo,String filename) throws IOException {
 	        // Load the template image from the resources folder
-	        File templateFile = templateImage.getFile();
-	        BufferedImage templateImage = ImageIO.read(templateFile);
+		 
+		 
+		 
+		 Resource templateImageResource = resourceLoader.getResource("classpath:ODIA-BLANK.jpg");
+		 
+		 //--File templateFile = templateImageResource.getFile();
+	      
+	     // Resource templateImageResource = resourceLoader.getResource("classpath:ODIA-BLANK.jpg");
+	      InputStream templateImageInputStream = templateImageResource.getInputStream();
+	      
+	  
+	      
+	      
+	 //       BufferedImage templateImage = ImageIO.read(templateFile);
 
 	        // Create a new PDF document
 	        
@@ -75,7 +96,8 @@ public class AadharService {
             	    PDPage page = new PDPage(customPageSize);
             	    document.addPage(page);
 
-                PDImageXObject pdImage = PDImageXObject.createFromFileByContent(templateFile, document);
+            	    PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, IOUtils.toByteArray(templateImageInputStream), "template");   
+               //-- PDImageXObject pdImage = PDImageXObject.createFromFileByContent(templateFile, document);
                 try (PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true, true)) {
                     contentStream.drawImage(pdImage, 0, 0, widthInPoints, heightInPoints);
                     
@@ -272,19 +294,26 @@ public class AadharService {
               
                 
                 
-             // Save the PDF
+//  --           // Save the PDF
+//                File outputFile = new File(pdfOutputDirectory, filename);
+//                FileUtils.writeByteArrayToFile(outputFile, pdfBytes);
+//                
+//                Resource pdfResource = new ByteArrayResource(pdfBytes);
+//
+//  --              return pdfResource;
+
+                
+
+                
+                // Save the PDF
                 File outputFile = new File(pdfOutputDirectory, filename);
                 FileUtils.writeByteArrayToFile(outputFile, pdfBytes);
-                
-                Resource pdfResource = new ByteArrayResource(pdfBytes);
+
+                Resource pdfResource = new FileSystemResource(outputFile);
 
                 return pdfResource;
 
 
-//                // Save the PDF
-//                File outputFile = new File(pdfOutputDirectory, filename);
-//                document.save(outputFile);
-                
                 
                 
             } catch (IOException e) {
