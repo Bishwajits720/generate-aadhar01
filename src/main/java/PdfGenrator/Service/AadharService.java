@@ -82,12 +82,20 @@ public class AadharService {
 	     //   Translate translate = TranslateOptions.getDefaultInstance().getService();
 	        
 	        
-	        int dpi = 72;
+	        // int dpi = 72;
 	        
-	        float widthInInches = 660 / (float) dpi;
-	        float heightInInches = 1600 / (float) dpi;
-	        float widthInPoints = widthInInches * dpi;
-	        float heightInPoints = heightInInches * dpi;
+	        // float widthInInches = 660 / (float) dpi;
+	        // float heightInInches = 1600 / (float) dpi;
+	        // float widthInPoints = widthInInches * dpi;
+	        // float heightInPoints = heightInInches * dpi;
+
+	       int dpi = 72;
+	      float widthInCentimeters = 7;  // Desired width in centimeters
+	      float heightInCentimeters = 21; // Desired height in centimeters
+	      float widthInInches = widthInCentimeters / 2.54f; // Convert cm to inches
+	      float heightInInches = heightInCentimeters / 2.54f; // Convert cm to inches
+	      float widthInPoints = widthInInches * dpi;
+	      float heightInPoints = heightInInches * dpi;
 	        
  
             
