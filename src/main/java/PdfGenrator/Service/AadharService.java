@@ -65,7 +65,7 @@ public class AadharService {
 		 
 		 
 		 
-		 Resource templateImageResource = resourceLoader.getResource("classpath:ODIA-NEW.jpg");
+		 Resource templateImageResource = resourceLoader.getResource("classpath:ODIA-yes.jpg");
 		 
 		 //--File templateFile = templateImageResource.getFile();
 	      
