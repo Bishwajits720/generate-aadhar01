@@ -183,101 +183,189 @@ public class AadharService {
                     
                     
       
-                    InputStream odiaFontStream = getClass().getResourceAsStream("/2- Jagannatha.TTF");
-                    PDFont odiaFont = PDType0Font.load(document, odiaFontStream);
-                    
-                    String odiaText = "" + aadharInfo.getNameOdia(); // Replace with Odia text
-                    contentStream.beginText();
-                    contentStream.setFont(odiaFont, 20);
-                    contentStream.newLineAtOffset(235, 300); // Adjust the coordinates
-                    contentStream.showText(odiaText);
-                    contentStream.endText();
-                    
+                      
+                   if(aadharInfo.getNameOdia().isEmpty()) {
+                	   
+                	   String textToPrint = "To";
 
-                    
-                    contentStream.beginText();
-                    contentStream.setFont(PDType1Font.HELVETICA, 22);
-                    contentStream.newLineAtOffset(235, 275);
-                    contentStream.showText("" + aadharInfo.getName());
-                    contentStream.endText();
-                    
-                    
-                    InputStream odiaFontStream1 = getClass().getResourceAsStream("/2- Jagannatha.TTF");
-                    PDFont odiaFont1 = PDType0Font.load(document, odiaFontStream1);
-                    
-                    
-                    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                       contentStream.beginText();
+                       contentStream.setFont(PDType1Font.HELVETICA, 21);
+                       contentStream.newLineAtOffset(120, 1106); // Replace x and y with the desired coordinates
+                       contentStream.showText(textToPrint);
+                       contentStream.endText();
+                       
+                       
+                       // Split and format the address
+                       String[] addressParts = aadharInfo.getAddress().split(",");
+                       float yCoordinate = 1083;
+                       for (String part : addressParts) {
+                           contentStream.beginText();
+                           contentStream.setFont(PDType1Font.HELVETICA, 21);
+                           contentStream.newLineAtOffset(120, yCoordinate);
+                           contentStream.showText(part.trim());
+                           contentStream.endText();
+                           yCoordinate -= 23;
+                       }
+                       
+                       contentStream.beginText();
+                       contentStream.setFont(PDType1Font.HELVETICA, 22);
+                       contentStream.newLineAtOffset(235, 300);
+                       contentStream.showText("" + aadharInfo.getName());
+                       contentStream.endText();
+                       
+                       
+                       InputStream odiaFontStream1 = getClass().getResourceAsStream("/2- Jagannatha.TTF");
+                       PDFont odiaFont1 = PDType0Font.load(document, odiaFontStream1);
+                       
+                       
+                       DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                       DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-                    String dob =  aadharInfo.getDateOfBirth().toString();
-                    
-                    LocalDate date = LocalDate.parse(dob, inputFormatter);
-                    String formattedDob = "/DOB: " + date.format(outputFormatter);
-                    
-                    String odiaText1 = "ଜନ୍ମ ତାରିଖ " +  formattedDob;  // aadharInfo.getDateOfBirth().toString();
-                    
-                    
+                       String dob =  aadharInfo.getDateOfBirth().toString();
+                       
+                       LocalDate date = LocalDate.parse(dob, inputFormatter);
+                       String formattedDob = "/DOB: " + date.format(outputFormatter);
+                       
+                       String odiaText1 = "ଜନ୍ମ ତାରିଖ " +  formattedDob;  // aadharInfo.getDateOfBirth().toString();
+                       
+                       
+                       contentStream.beginText();
+                       contentStream.setFont(odiaFont1, 19);
+                       contentStream.newLineAtOffset(235, 275);
+                       contentStream.showText(odiaText1);
+                       contentStream.endText();
+                       
+                       
+                       
+                       InputStream odiaFontStream2 = getClass().getResourceAsStream("/2- Jagannatha.TTF");
+                       PDFont odiaFont2 = PDType0Font.load(document, odiaFontStream2);
+                       
+                       
+                       String genderText;
+                       if ("Male".equals(aadharInfo.getGender())) {
+                           genderText = "ପୁରୁଷ / MALE";
+                       } else  {
+                           genderText = "ମହିଳା / FEMALE";
+                       } 
+                       
+      
+//                       String odiaText2 = "ପୁରୁଷ / Male"; 
+//                       
+//                       String odiatext2= "ମହିଳା /female";
+
+                  
                     contentStream.beginText();
-                    contentStream.setFont(odiaFont1, 19);
+                    contentStream.setFont(odiaFont2, 19);
                     contentStream.newLineAtOffset(235, 250);
-                    contentStream.showText(odiaText1);
+                    contentStream.showText(genderText);
                     contentStream.endText();
-                    
-                    
-                    
-                    InputStream odiaFontStream2 = getClass().getResourceAsStream("/2- Jagannatha.TTF");
-                    PDFont odiaFont2 = PDType0Font.load(document, odiaFontStream2);
-                    
-                    
-                    String genderText;
-                    if ("Male".equals(aadharInfo.getGender())) {
-                        genderText = "ପୁରୁଷ / MALE";
-                    } else  {
-                        genderText = "ମହିଳା / FEMALE";
-                    } 
-                    
-   
-//                    String odiaText2 = "ପୁରୁଷ / Male"; 
-//                    
-//                    String odiatext2= "ମହିଳା /female";
 
-               
-                 contentStream.beginText();
-                 contentStream.setFont(odiaFont2, 19);
-                 contentStream.newLineAtOffset(235, 225);
-                 contentStream.showText(genderText);
-                 contentStream.endText();
-                 
-                 
-                 
-                 
-                 String textToPrint = "To";
+                       
+                       
+                       
+                	   
+                   }else {
+                	   
+                	   InputStream odiaFontStream = getClass().getResourceAsStream("/2- Jagannatha.TTF");
+                       
+                       PDFont odiaFont = PDType0Font.load(document, odiaFontStream ,true);
+                       
+                       String odiaText = aadharInfo.getNameOdia();
+                      
 
-                 contentStream.beginText();
-                 contentStream.setFont(PDType1Font.HELVETICA, 21);
-                 contentStream.newLineAtOffset(120, 1119); // Replace x and y with the desired coordinates
-                 contentStream.showText(textToPrint);
-                 contentStream.endText();
-                 
-                 
-                 
-                 contentStream.beginText();
-                 contentStream.setFont(odiaFont, 20);
-                 contentStream.newLineAtOffset(120, 1092); // Adjust the coordinates
-                 contentStream.showText(odiaText);
-                 contentStream.endText();
+                       
+                       contentStream.beginText();
+                       contentStream.setFont(odiaFont, 22);
+                       contentStream.newLineAtOffset(235, 300); // Adjust the coordinates
+                       contentStream.showText(odiaText);
+                       contentStream.endText();
+                       
+                       
+                       
+                       String textToPrint = "To";
 
-                    // Split and format the address
-                    String[] addressParts = aadharInfo.getAddress().split(",");
-                    float yCoordinate = 1065;
-                    for (String part : addressParts) {
-                        contentStream.beginText();
-                        contentStream.setFont(PDType1Font.HELVETICA, 21);
-                        contentStream.newLineAtOffset(120, yCoordinate);
-                        contentStream.showText(part.trim());
-                        contentStream.endText();
-                        yCoordinate -= 23;
-                    }
+                       contentStream.beginText();
+                       contentStream.setFont(PDType1Font.HELVETICA, 21);
+                       contentStream.newLineAtOffset(120, 1106); // Replace x and y with the desired coordinates
+                       contentStream.showText(textToPrint);
+                       contentStream.endText();
+                       
+                       
+                       contentStream.beginText();
+                       contentStream.setFont(odiaFont, 23);
+                       contentStream.newLineAtOffset(120, 1077); // Adjust the coordinates
+                       contentStream.showText(odiaText);
+                       contentStream.endText();
+
+                          // Split and format the address
+                          String[] addressParts = aadharInfo.getAddress().split(",");
+                          float yCoordinate = 1052;
+                          for (String part : addressParts) {
+                              contentStream.beginText();
+                              contentStream.setFont(PDType1Font.HELVETICA, 21);
+                              contentStream.newLineAtOffset(120, yCoordinate);
+                              contentStream.showText(part.trim());
+                              contentStream.endText();
+                              yCoordinate -= 23;
+                          }
+                          
+                          
+                          
+                          contentStream.beginText();
+                          contentStream.setFont(PDType1Font.HELVETICA, 22);
+                          contentStream.newLineAtOffset(235, 275);
+                          contentStream.showText("" + aadharInfo.getName());
+                          contentStream.endText();
+                          
+                          
+                          InputStream odiaFontStream1 = getClass().getResourceAsStream("/2- Jagannatha.TTF");
+                          PDFont odiaFont1 = PDType0Font.load(document, odiaFontStream1);
+                          
+                          
+                          DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                          DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                          String dob =  aadharInfo.getDateOfBirth().toString();
+                          
+                          LocalDate date = LocalDate.parse(dob, inputFormatter);
+                          String formattedDob = "/DOB: " + date.format(outputFormatter);
+                          
+                          String odiaText1 = "ଜନ୍ମ ତାରିଖ " +  formattedDob;  // aadharInfo.getDateOfBirth().toString();
+                          
+                          
+                          contentStream.beginText();
+                          contentStream.setFont(odiaFont1, 19);
+                          contentStream.newLineAtOffset(235, 250);
+                          contentStream.showText(odiaText1);
+                          contentStream.endText();
+                          
+                          
+                          
+                          InputStream odiaFontStream2 = getClass().getResourceAsStream("/2- Jagannatha.TTF");
+                          PDFont odiaFont2 = PDType0Font.load(document, odiaFontStream2);
+                          
+                          
+                          String genderText;
+                          if ("Male".equals(aadharInfo.getGender())) {
+                              genderText = "ପୁରୁଷ / MALE";
+                          } else  {
+                              genderText = "ମହିଳା / FEMALE";
+                          } 
+                          
+         
+//                          String odiaText2 = "ପୁରୁଷ / Male"; 
+//                          
+//                          String odiatext2= "ମହିଳା /female";
+
+                     
+                       contentStream.beginText();
+                       contentStream.setFont(odiaFont2, 19);
+                       contentStream.newLineAtOffset(235, 225);
+                       contentStream.showText(genderText);
+                       contentStream.endText();
+                       
+                	   
+                   }
                     
                     
                     // Insert uploaded photo
